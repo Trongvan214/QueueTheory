@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class customer 
+struct customer 
 {
     int number;
     int arrival_time;

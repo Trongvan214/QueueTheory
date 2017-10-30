@@ -13,7 +13,7 @@ class Customer
 class Cashier 
 {
     Queue line;
-    //minutes in use 
+    //  in use 
     int timer;
     //a for available, i for inactive
     char status;
