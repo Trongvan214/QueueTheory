@@ -6,16 +6,14 @@ using namespace std;
 Node::Node(void)
 {
     //default case
-    data.number = 0;
-    data.serv_time = 0;
-    data.arrival_time = 0;
+    cust_serv_time = 0;
+    waiting__time = 0;
 }
-Node::Node(int num,int arr_time,int serv_time);
+Node::Node(int serv_time)
 {
     //set customer data
-    data.number = num;
-    data.serv_time = serv_time;
-    data.arrival_time = serv_time;
+    cust_serv_time = serv_time;
+    waiting__time = 0;
 }
 void Node::change_pointer(Node* next_ptr)
 {
@@ -29,23 +27,21 @@ Node* Node::return_next()
     return next;
 }
 
-customer Node::return_data();
+int Node::return_serv_time()
 {
-    //return the letter
-    return letter;
+    return cust_serv_time;
 }
-
-bool Node::compare_arrive_time(int time);
-{
-   //compare given time with time in node
-   return data.arrival_time == time;
-}
-
 void Node::process_data()
 {
     //print out the letter
-    cout << "Num: " << data.number << endl;
-    cout << "Arrive Time: " << data.arrival_time << endl;
-    cout << "Service Time: " << data.serv_time << endl;
+    cout << "Customer serve time " << cust_serv_time << endl;
     
+}
+void Node::increase_wait_time()
+{
+    waiting_time+=1;
+}
+int Node::return_wait_time()
+{
+    return waiting_time;
 }

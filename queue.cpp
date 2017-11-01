@@ -112,14 +112,15 @@ Queue::Queue()
 {
     //default case
     front = rear = NULL;
+    waiting_time = 0;
     len = 0;
 }
 
 //put in a new node
-void Queue::enqueue(int num,int arr_time,int serv_time)
+void Queue::enqueue(int serv_time)
 {
-    Node* ptr = new Node(num,arr_time,serv_time);
-    if(front == NULL)
+    Node* ptr = new Node(serv_time);
+    if(front == NULL || rear == NULL)
     {
         front = rear = ptr;
     }
@@ -150,11 +151,11 @@ bool Queue::dequeue()
 }
 
 //return the front node
-customer Queue::get_front()
+int Queue::get_front()
 {
     if(front != NULL)
     {
-        return front->return_data();
+        return front->return_serv_time();
     }
     else
     {
@@ -163,18 +164,22 @@ customer Queue::get_front()
 }
 
 //return the rear node
-customer Queue::get_rear()
+int Queue::get_rear()
 {
     if(rear != NULL)
     {
-        return rear->return_data();
+        return rear->return_serv_time();
     }
     else
     {
         return 0;
     }
 }
-
+//return the front node waiting time
+int Cashier::get_waiting_time()
+{
+    return front->return_wait_time();
+}
 //return true or false that it's empty
 bool Queue::is_empty()
 {
@@ -194,6 +199,18 @@ int Queue::list_count()
     return len;
 }
 
+//traverse through all node and increase wait time
+void Queue::all_increase_wait_time()
+{
+    temp = front;
+    while(temp!=NULL)
+    {
+        //increase wait time for that node
+        temp->increase_wait_time();
+        //go to the next
+        temp=temp->return_next();
+    }
+}
 
 
 

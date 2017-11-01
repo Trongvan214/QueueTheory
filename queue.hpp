@@ -9,12 +9,14 @@ class Queue
     int len;
     public:
         Queue(void);
-        void enqueue(int num,int arr_time,int serv_time);
+        void enqueue(int serv_time);
         bool dequeue();
-        customer get_front();
-        customer get_rear();
+        int get_front();
+        int get_rear();
         bool is_empty();
         int list_count();
+        int get_waiting_time();
+        void all_increase_wait_time();
     
 };
 #endif

@@ -3,24 +3,20 @@
 
 using namespace std;
 
-struct customer 
-{
-    int number;
-    int arrival_time;
-    int serv_time;
-};
 class Node 
 {
-    customer data;
+    int cust_serv_time
+    int waiting_time;
     Node* next;
     public: 
         Node(void);
-        Node(int num,int arr_time,int serv_time);
+        Node(int serv_time);
         void change_pointer(Node *next_ptr);
         Node* return_next();
-        customer return_data();
-        bool compare_arrive_time(int time);
+        int return_serv_time();
         void process_data(); 
+        void increase_wait_time();
+        int return_wait_time();
         
 };
 #endif
