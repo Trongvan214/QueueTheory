@@ -20,31 +20,30 @@ void Cashier::serv_cust(int serv_time)
     //increase total customer serv
     t_cust_serv++;
 }
-void Cashier::add_to_line(int serv_time)
+void Cashier::add_to_line(int arriv_time, int serv_time)
 {
-    //check to see if line have 6 people
-    if(line.list_count() != 6)
-    {
-        //put in waiting line
-        line.enqueue(serv_time);
-    }
-    else 
+    if(line.check_same_arriv_time(arriv_time) || line.list_count() >= 6)
     {
         //throw customer 
         t_cust_throw++;
+    }
+    else
+    {
+        //put in waiting line
+        line.enqueue(serv_time);
     }
 }
 void Cashier::min_past()
 {
     //reduce down serv remaining
     serv_remain--;
+    //add total wait time 
+    t_wait_time += line.list_count();
     //there are no time left get the next customer in line
-    if(serv_remain <= 0 && !line.is_empty())
+    if(serv_remain == 0 && !line.is_empty())
     {
         //serv the next customer
         serv_remain = line.get_front();
-        //add total waiting time
-        t_wait_time += line.get_waiting_time();
         //remove that customer from waiting line
         line.dequeue();
     }
@@ -55,6 +54,10 @@ bool Cashier::is_available()
     return status==="a"? 1:0;
 }
 
+int Cashier::waiting_customer()
+{
+    return line.list_count();
+}
 //infomation for after the store closes
 int Cashier::return_t_wait_time()
 {

@@ -100,10 +100,8 @@ Queue front – call class queue front function
 Queue rear – call class queue rear function
 Is empty – call class is empty function
 Number of nodes – call list count function
-
 */
 #include <iostream>
-
 #include "queue.hpp"
 
 using namespace std;
@@ -115,9 +113,8 @@ Queue::Queue()
     waiting_time = 0;
     len = 0;
 }
-
 //put in a new node
-void Queue::enqueue(int serv_time)
+void Queue::enqueue(int arriv_time,int serv_time)
 {
     Node* ptr = new Node(serv_time);
     if(front == NULL || rear == NULL)
@@ -131,7 +128,6 @@ void Queue::enqueue(int serv_time)
     }
     len++;
 }
-
 //take a node at the front 
 bool Queue::dequeue()
 {
@@ -162,7 +158,6 @@ int Queue::get_front()
         return 0;
     }
 }
-
 //return the rear node
 int Queue::get_rear()
 {
@@ -175,12 +170,6 @@ int Queue::get_rear()
         return 0;
     }
 }
-//return the front node waiting time
-int Cashier::get_waiting_time()
-{
-    return front->return_wait_time();
-}
-//return true or false that it's empty
 bool Queue::is_empty()
 {
     if(len == 0 || front == NULL || rear == NULL)
@@ -192,26 +181,16 @@ bool Queue::is_empty()
         return false;
     }
 }
-
 //return how many node is in the queue
 int Queue::list_count()
 {
     return len;
 }
 
-//traverse through all node and increase wait time
-void Queue::all_increase_wait_time()
+bool Queue::check_same_arriv_time(int arriv_time)
 {
-    temp = front;
-    while(temp!=NULL)
-    {
-        //increase wait time for that node
-        temp->increase_wait_time();
-        //go to the next
-        temp=temp->return_next();
-    }
+    return front->cust_arriv_time === arriv_time;
 }
-
 
 
 

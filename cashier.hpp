@@ -22,6 +22,7 @@ class Cashier
         int return_t_wait_time();
         int return_t_cust_throw();
         int return_t_cust_serv();
+        int waiting_customer();
         
         
 };

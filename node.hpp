@@ -5,18 +5,18 @@ using namespace std;
 
 class Node 
 {
-    int cust_serv_time
+    int cust_serv_time;
+    int cust_arriv_time;
     int waiting_time;
     Node* next;
     public: 
         Node(void);
-        Node(int serv_time);
+        Node(int arriv_time,int serv_time);
         void change_pointer(Node *next_ptr);
         Node* return_next();
         int return_serv_time();
         void process_data(); 
-        void increase_wait_time();
-        int return_wait_time();
+        int cust_arriv_time();
         
 };
 #endif
