@@ -6,6 +6,7 @@
 class Queue 
 {
     Node *front, *rear, *temp;
+    int t_wait_time, t_cust_serv, t_cust_throw, serv_time;
     int len;
     public:
         Queue(void);
@@ -15,7 +16,9 @@ class Queue
         int get_rear();
         bool is_empty();
         int list_count();
-        bool check_same_arriv_time(int arriv_time);
-    
+        void min_past();
+        int r_wait_time();
+        int r_cust_serv();
+        int r_cust_throw();
 };
 #endif

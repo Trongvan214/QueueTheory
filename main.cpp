@@ -1,21 +1,22 @@
 #include <iostream>
 #include <fstream>
 
-#include "cashier.hpp"
+#include "queue.hpp"
 
 using namespace std;
 
-Cashier* pick_cashier(Cashier cash1, Cashier cash2, Cashier cash3);
+Queue* pick_cashier(Queue* cash1, Queue* cash2, Queue* cash3);
 
 int main()
 {
-    Cashier cash1,cash2,cash3;
+    Queue cash1,cash2,cash3;
     int t_cust, 
         cust_num, 
         arriv_time, 
         serv_time, 
         t_cust_serv,
         t_cust_throw,
+        t_wait_time,
         working_time = 0;
     ifstream read("customers.txt");
     read >> t_cust; 
@@ -23,20 +24,14 @@ int main()
     while(working_time!=570)
     {
         //c is the least busiest cashier out of the three
-        Cashier* c = pick_cashier(cash1,cash2,cash3);
+        Queue* c = pick_cashier(&cash1,&cash2,&cash3);
         //if not 30 min before closing (accept customer)
         if(working_time!=540)
         {
-            if(working_time === arriv_time)
+            if(working_time == arriv_time)
             {
-                if(c->is_available())
-                {
-                    c->serv_cust(serv_time);
-                }
-                else
-                {
-                    c->add_to_line(arriv_time,serv_time)
-                }
+
+                c->enqueue(arriv_time,serv_time);
                 //read the next line
                 read>>cust_num>>arriv_time>>serv_time;
             }
@@ -50,26 +45,35 @@ int main()
         c->min_past();
         working_time++;
     }
+    //total up all 3 cashier total throw
+    t_cust_throw+=cash1.r_cust_throw()
+                +cash2.r_cust_throw()
+                +cash3.r_cust_throw();
+    t_cust_serv=cash1.r_cust_serv()+cash2.r_cust_serv()+cash3.r_cust_serv();
+    t_wait_time=cash1.r_wait_time()+cash2.r_wait_time()+cash3.r_wait_time();
+    int avg_wait = t_cust_serv/t_wait_time;
+    cout << avg_wait << endl;
 }
 
-Cashier* pick_cashier(Cashier cash1, Cashier cash2, Cashier cash3)
+Queue* pick_cashier(Queue* cash1, Queue* cash2, Queue* cash3)
 {
     //total wait customer for cashier
-    int w1 = cash1.waiting_customer(),
-        w2 = cash2.waiting_customer(),
-        w3 = cash3.waiting_customer();
+    int w1 = cash1->list_count(),
+        w2 = cash2->list_count(),
+        w3 = cash3->list_count();
     if(w1<=w2&&w1<=w3)
     {
-        return &cash1;
+        return cash1;
     }
     else if(w2<w1&&w2<=w3)
     {
-        return &cash2;
+        return cash2;
     }
     else if(w3<w1&&w3<w2)
     {
-        return &cash3;
+        return cash3;
     }
+    return 0;
 }
 
 

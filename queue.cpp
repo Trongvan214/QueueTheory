@@ -108,25 +108,33 @@ using namespace std;
 
 Queue::Queue()
 {
-    //default case
-    front = rear = NULL;
-    waiting_time = 0;
-    len = 0;
+    //default case everything to 0 and NULL
+    front = rear = temp = NULL;
+    t_wait_time = t_cust_serv = t_cust_throw = serv_time = len = 0;
 }
 //put in a new node
-void Queue::enqueue(int arriv_time,int serv_time)
+void Queue::enqueue(int g_arriv_time,int g_serv_time)
 {
-    Node* ptr = new Node(serv_time);
-    if(front == NULL || rear == NULL)
+    //check when they arriv at the same time or full line
+    if(len != 0 && (g_arriv_time == get_rear() || len >= 6))
     {
-        front = rear = ptr;
+        //add 1 to throw customers
+        t_cust_throw++;
     }
-    else
+    else 
     {
-        rear->change_pointer(ptr);
-        rear = ptr;
-    }
-    len++;
+        Node* ptr = new Node(g_arriv_time,g_serv_time);
+        if(front == NULL || rear == NULL)
+        {
+            front = rear = ptr;
+        }
+        else
+        {
+            rear->change_pointer(ptr);
+            rear = ptr;
+        }
+        len++;
+    }   
 }
 //take a node at the front 
 bool Queue::dequeue()
@@ -163,7 +171,7 @@ int Queue::get_rear()
 {
     if(rear != NULL)
     {
-        return rear->return_serv_time();
+        return rear->return_arriv_time();
     }
     else
     {
@@ -187,12 +195,35 @@ int Queue::list_count()
     return len;
 }
 
-bool Queue::check_same_arriv_time(int arriv_time)
+void Queue::min_past()
 {
-    return front->cust_arriv_time === arriv_time;
+    //add total wait time 
+    //-1 is the cust being serv
+    t_wait_time+=len-1;
+    
+    //reduce serving time 
+    serv_time--;
+    
+    if(serv_time <= 0 && len != 0)
+    {
+        dequeue();
+        t_cust_serv++;
+        serv_time = front->return_serv_time();
+    }
 }
 
-
+int Queue::r_wait_time()
+{
+    return t_wait_time;
+}
+int Queue::r_cust_serv()
+{
+    return t_cust_serv;
+}
+int Queue::r_cust_throw()
+{
+    return t_cust_throw;
+}
 
 
 

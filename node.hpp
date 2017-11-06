@@ -7,7 +7,6 @@ class Node
 {
     int cust_serv_time;
     int cust_arriv_time;
-    int waiting_time;
     Node* next;
     public: 
         Node(void);
@@ -16,7 +15,7 @@ class Node
         Node* return_next();
         int return_serv_time();
         void process_data(); 
-        int cust_arriv_time();
+        int return_arriv_time();
         
 };
 #endif
