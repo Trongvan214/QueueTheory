@@ -111,18 +111,23 @@ Queue::Queue()
     //default case everything to 0 and NULL
     front = rear = temp = NULL;
     t_wait_time = t_cust_serv = t_cust_throw = serv_time = len = 0;
+    cout << t_wait_time << t_cust_serv << t_cust_throw << serv_time << len << endl;
 }
 //put in a new node
 void Queue::enqueue(int g_arriv_time,int g_serv_time)
 {
     //check when they arriv at the same time or full line
-    if(len != 0 && (g_arriv_time == get_rear() || len >= 6))
+    if(len != 0 && (g_arriv_time == get_rear() || len == 6))
     {
+        //////////////////////////////////////////
+        cout << "throw away " << endl;
         //add 1 to throw customers
         t_cust_throw++;
     }
     else 
     {
+        //////////////////////////////////////////
+        cout << "put in line" << endl;
         Node* ptr = new Node(g_arriv_time,g_serv_time);
         if(front == NULL || rear == NULL)
         {
@@ -134,7 +139,11 @@ void Queue::enqueue(int g_arriv_time,int g_serv_time)
             rear = ptr;
         }
         len++;
-    }   
+        //////////////////////////////////////////
+        cout << "len " << len << endl;
+    }
+    //////////////////////////////////////////
+    cout << "did go through function " << endl;   
 }
 //take a node at the front 
 bool Queue::dequeue()
@@ -197,21 +206,31 @@ int Queue::list_count()
 
 void Queue::min_past()
 {
-    //add total wait time 
-    //-1 is the cust being serv
-    t_wait_time+=len-1;
     
     //reduce serving time 
-    serv_time--;
+    serv_time--;  
     
-    if(serv_time <= 0 && len != 0)
+    
+    //add total wait time 
+    //-1 is the cust being serv
+    if(len!= 0)
     {
-        dequeue();
-        t_cust_serv++;
-        serv_time = front->return_serv_time();
+        t_wait_time+=len-1;
+        //if available or finish with customer take next in line
+        if(serv_time <= 0)
+        {
+            //////////////////////////////////////////
+            cout << "remove node " << endl;
+            dequeue();
+            //set new serv time 
+            serv_time = front->return_serv_time();
+            //increase total serv cust
+            t_cust_serv++;
+        }
+        
     }
+    
 }
-
 int Queue::r_wait_time()
 {
     return t_wait_time;
