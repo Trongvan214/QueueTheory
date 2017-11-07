@@ -1,53 +1,88 @@
+//Author: Trong Van
+//Student ID: x454v285
+//Project 1
+/*------------------Start program----------------------
+ * 
+ *      take the first customer from data .txt
+ *      while working hours is not over
+ *          if not 30 min before closing 
+ *              if data arriv == working hour
+ *                  sort customer to the shortest line
+ *                  take the next data
+ *          else
+ *              throw customer
+ *       
+ *      finish working hours 
+ *          put all the data in results.txt
+ **/
+
+
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 #include "queue.hpp"
 
 using namespace std;
 
-Queue* pick_cashier(Queue &cash1, Queue &cash2, Queue &cash3);
-
 int main()
 {
+    //the cashiers
     Queue cash1,cash2,cash3;
     //point to the short len queue
-    Queue* c;
     int t_cust, 
         cust_num, 
         arriv_time, 
-        serv_time, 
-        t_cust_serv,
-        t_cust_throw,
-        t_wait_time,
+        serv_time , 
+        t_cust_serv = 0,
+        t_cust_throw = 0,
+        t_wait_time = 0,
         working_time = 0;
+    //the len count of the cashiers
+    int len1, len2, len3;
+    int prev_arriv;
     ifstream read("customers.txt");
     read >> t_cust; 
     read>>cust_num>>arriv_time>>serv_time;
-    while(working_time!=45)
+    while(working_time!=600)
     { 
-        if(working_time<=570)
+        if(working_time == arriv_time)
         {
-            //c is the least busiest cashier out of the three
-            if(working_time == arriv_time)
+            //throw customer
+            if(working_time >= 570)
             {
-                c = pick_cashier(cash1,cash2,cash3);
-                //////////////////////////////////////////
-                cout << "Working hour " << working_time << endl;
-                //cout << "list count " << c.list_count() << endl;
-                cout << "Arriving time " << arriv_time << endl;
-                //if not 30 min before closing (accept customer)
-                
-                //////////////////////////////////////////
-                cout << "we in " << endl;
-                c->enqueue(arriv_time,serv_time);
-                //read the next line
-                read>>cust_num>>arriv_time>>serv_time;
+                t_cust_throw++;
+            } 
+            prev_arriv = arriv_time;
+            len1=cash1.list_count();
+            len2=cash2.list_count();
+            len3=cash3.list_count();
+            if(len1<=len2&&len1<=len3)
+            {
+                cash1.enqueue(arriv_time,serv_time);
             }
-        }
-        //throw customer
-        else 
-        {
-            t_cust_throw++;
+            else if(len2<len1&&len2<=len3)
+            {
+                cash2.enqueue(arriv_time,serv_time);
+            }
+            else if(len3<len1&&len3<len2)
+            {
+                cash3.enqueue(arriv_time,serv_time);
+            }
+            //read the next line check see if it's the end
+            if(read>>cust_num>>arriv_time>>serv_time)
+            {
+                //if not check next arri to prev_arriv
+                while(arriv_time == prev_arriv)
+                {
+                    //if next line is the end jump out loop
+                    if(!(read>>cust_num>>arriv_time>>serv_time))
+                    {
+                        arriv_time = -9999;
+                    }
+                    t_cust_throw++;
+                }
+            }
         }
         //this function does all calculation to take next customer
         cash1.min_past();
@@ -62,8 +97,21 @@ int main()
                 +cash3.r_cust_throw();
     t_cust_serv=cash1.r_cust_serv()+cash2.r_cust_serv()+cash3.r_cust_serv();
     t_wait_time=cash1.r_wait_time()+cash2.r_wait_time()+cash3.r_wait_time();
-    //int avg_wait = t_cust_serv/t_wait_time;
-    //////////////////////////////////////////
+    float avg_wait = 0;
+    if(t_wait_time != 0)
+    {
+        avg_wait = (float)t_wait_time/t_cust_serv;
+    }
+    //write to file 
+    ofstream write("results.txt");
+    write << setprecision(2) << fixed;
+    write << "Total number of customers serviced: " << t_cust_serv << endl;
+    write << "Total number of customers turned away: " << t_cust_throw << endl;
+    write << "Average wait time: " <<  avg_wait << endl; 
+    write << "Total wait time: " << t_wait_time << endl;
+    write.close();
+
+    cout << setprecision(2) << fixed;
     cout << "cash1 serv " << cash1.r_cust_serv() << endl;
     cout << "cash1 wait " << cash1.r_wait_time() << endl;
     cout << "cash1 throw " << cash1.r_cust_throw() << endl;
@@ -73,34 +121,10 @@ int main()
     cout << "cash3 serv " << cash3.r_cust_serv() << endl;
     cout << "cash3 wait " << cash3.r_wait_time() << endl;
     cout << "cash3 throw " << cash3.r_cust_throw() << endl;
-    //cout << "average wait time " << avg_wait << endl;
+    cout << "average wait time " << avg_wait << endl;
     cout << "total cust serv " << t_cust_serv << endl;
     cout << "total cust throw " << t_cust_throw << endl;
     cout << "total wait time " << t_wait_time << endl;
-}
-
-Queue* pick_cashier(Queue &cash1, Queue &cash2, Queue &cash3)
-{
-    //total wait customer for cashier
-    int w1 = cash1.list_count(),
-        w2 = cash2.list_count(),
-        w3 = cash3.list_count();
-    if(w1<=w2&&w1<=w3)
-    {
-        return &cash1;
-    }
-    else if(w2<w1&&w2<=w3)
-    {
-        return &cash2;
-    }
-    else if(w3<w1&&w3<w2)
-    {
-        return &cash3;
-    }
-    //Queue error;
-    //////////////////////////////////////////
-    cout << "error" << endl;
-    return 0;
 }
 
 
