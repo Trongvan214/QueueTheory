@@ -90,7 +90,22 @@ Member function
 
 	return list len
 
-
+Member function
+*    min_past
+*    input: none
+*    output: none
+*    return none
+*    functionality: calculate the wait time
+* 
+Member function
+*   r_cust_serv 
+*   functionality: return the t_cust_serv
+Member function 
+*   r_cust_throw
+*   functionality: return the t_cust_throw in class
+Member function
+*   r_wait_time 
+*   fucntionality: return the t_wait_time in class
 
 
 Create queue – make an instance of class queue
@@ -181,6 +196,7 @@ int Queue::get_rear()
         return 0;
     }
 }
+//return true/false whether the queue is empty
 bool Queue::is_empty()
 {
     if(len == 0 || front == NULL || rear == NULL)
@@ -218,14 +234,17 @@ void Queue::min_past()
         t_wait_time+=len-1;
     }
 }
+//return total wait time 
 int Queue::r_wait_time()
 {
     return t_wait_time;
 }
+//return total customer serves
 int Queue::r_cust_serv()
 {
     return t_cust_serv;
 }
+//return total customer throw
 int Queue::r_cust_throw()
 {
     return t_cust_throw;

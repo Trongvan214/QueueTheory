@@ -16,7 +16,6 @@
  *          put all the data in results.txt
  **/
 
-
 #include <iostream>
 #include <fstream>
 #include <iomanip>
